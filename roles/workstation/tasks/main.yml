@@ -1,0 +1,23 @@
+---
+# tasks file for workstation
+- name: stop unattended-upgrades
+  systemd:
+    name: unattended-upgrades
+    state: stopped
+
+- name: update packages
+  apt:
+    update_cache: yes
+    install_recommends: yes
+    only_upgrade: yes
+    upgrade: dist
+
+- name: install new user's packages
+  apt:
+    name: "{{item}}"
+  with_items: "{{packages.users}}"
+
+- name: install domain's packages
+  apt:
+    name: "{{item}}"
+  with_items: "{{packages.ad}}"

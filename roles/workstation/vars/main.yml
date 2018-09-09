@@ -1,0 +1,21 @@
+---
+# vars file for workstation
+packages:
+  ad:
+    - krb5-user
+    - samba
+    - winbind
+    - ntp
+    - libpam-krb5
+    - libpam-winbind
+    - libnss-winbind
+    - libpam-ccreds
+    - nscd
+    - nss-updatedb
+    - libnss-db
+  users:
+    - mc
+    - htop
+    - gdebi
+    - smartmontools
+    - alsa-tools-gui
