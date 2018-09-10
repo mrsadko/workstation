@@ -1,2 +1,11 @@
 ---
 # defaults file for workstation
+domain_name: instinctools.ru
+work_group: INSTINCTOOLS
+controllers:
+  - name: server1
+    ip: 192.168.93.187
+  - name: server2
+    ip: 192.168.93.188
+  - name: server3
+    ip: 192.168.94.1

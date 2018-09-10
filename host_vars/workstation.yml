@@ -6,3 +6,4 @@ ansible_ssh_pass: helo
 ansible_sudo_pass: helo
 #ansible_become_user: techsuppot
 become: yes
+host_name: somename

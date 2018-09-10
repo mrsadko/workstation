@@ -1,0 +1,17 @@
+127.0.0.1	localhost
+127.0.1.1	{{host_name}}.{{domain_name}} {{host_name}}
+{% for dc in controllers %}
+"{{dc.ip}}""	"{{dc.name}}"."{{domain_name}}"	"{{dc.name}}"
+{% endfor %}
+
+#192.168.93.187	server.instinctools.ru	server
+#192.168.93.188	server2.instinctools.ru	server2
+#192.168.94.1	server3.instinctools.ru	server3
+#172.17.0.1	minamdc.minsk.instinctools.ru	minamdc
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
