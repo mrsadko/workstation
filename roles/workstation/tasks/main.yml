@@ -21,3 +21,43 @@
   apt:
     name: "{{item}}"
   with_items: "{{packages.ad}}"
+
+- name: set hostname
+  template:
+    src: hostname.j2
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    restart systemd-logind
+
+- name: copy head file
+  template:
+    src: head.j2
+    dest: /etc/resolvconf/resolv.conf.d/head
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set ntp configuration
+  template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    restart ntp

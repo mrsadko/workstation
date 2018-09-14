@@ -1,9 +1,8 @@
 ---
-ansible_host: 192.168.1.245
+ansible_host: 172.25.200.232
 ansible_port: 22
-ansible_user: techsuppot
-ansible_ssh_pass: helo
-ansible_sudo_pass: helo
-#ansible_become_user: techsuppot
+ansible_user: auto
+ansible_ssh_pass: auto
+ansible_sudo_pass: auto
 become: yes
 host_name: somename
