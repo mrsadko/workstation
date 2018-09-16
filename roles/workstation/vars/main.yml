@@ -19,3 +19,12 @@ packages:
     - gdebi
     - smartmontools
     - alsa-tools-gui
+
+loacl_grpoups:
+    - adm
+    - cdrom
+    - sudo
+    - dip
+    - plugdev
+    - lpadmin
+    - sambashare

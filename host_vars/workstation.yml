@@ -6,3 +6,4 @@ ansible_ssh_pass: auto
 ansible_sudo_pass: auto
 become: yes
 host_name: somename
+user_to_add: someuser

@@ -61,3 +61,92 @@
     backup: yes
   notify:
     restart ntp
+
+- name: set kerberos configuration
+  template:
+    src: krb5.conf.j2
+    dest: /etc/krb5.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set samba configuration
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/krb5.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set linits
+  template:
+    src: limits.conf.j2
+    dest: /etc/security/limits.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set limits
+  template:
+    src: limits.conf.j2
+    dest: /etc/security/limits.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set nsswitch
+  template:
+    src: nsswitch.conf.j2
+    dest: /etc/nsswitch.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set pamd common-session config
+  template:
+    src: common-session.conf.j2
+    dest: /etc/pam.d/common-session.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: restart networking
+  systemd:
+    name: networking
+    state: restarted
+
+- name: stop winbind
+  systemd:
+    name: networking
+    state: stopped
+
+- name: stop restart samba
+  systemd:
+    name: smbd
+    state: restarted
+
+- name: start winbind
+  systemd:
+    name: networking
+    state: started
+
+- name: do test connection
+  command: /usr/bin/net ads testjoin
+    register: testjoin
+    ignore_errors: True
+
+- name: connect to domain
+  command: /usr/bin/net ads join -U "{{domain_user}}" -D "{{domain_pass}}"
+    register: join
+    when: testjoin is succeeded
+
+- name: add domain user to local groups
+  command: /usr/sbin/adduser "{{}user_to_add}" "{{item}}"
+    when: join is succeeded
+  with_items: "{{local_groups}}"
