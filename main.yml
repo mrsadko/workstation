@@ -2,3 +2,13 @@
 - hosts: all
   roles:
     - workstation
+  vars_prompt:
+    - name: user_to_add
+      prompt: "Which user can i add to local groups"
+      private: no
+    - name: domain_user
+      prompt: "enter domain user name"
+      private: no
+    - name: domain_pass
+      prompt: "enter pass"
+      private: yes

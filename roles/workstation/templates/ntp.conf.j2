@@ -18,7 +18,7 @@ filegen clockstats file clockstats type day enable
 # more information.
 #server server.instinctools.ru
 {% for dc in controllers %}
-server	"{{dc.name}}"."{{domain_name}}"
+server	{{dc.name}}.{{domain_name}}
 {% endfor %}
 server 0.ubuntu.pool.ntp.org
 server 1.ubuntu.pool.ntp.org

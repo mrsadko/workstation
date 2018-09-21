@@ -1,3 +1,4 @@
+
 ---
 # vars file for workstation
 packages:
@@ -20,11 +21,11 @@ packages:
     - smartmontools
     - alsa-tools-gui
 
-loacl_grpoups:
-    - adm
-    - cdrom
-    - sudo
-    - dip
-    - plugdev
-    - lpadmin
-    - sambashare
+local_groups:
+  - adm
+  - cdrom
+  - sudo
+  - dip
+  - plugdev
+  - lpadmin
+  - sambashare

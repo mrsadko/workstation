@@ -2,7 +2,7 @@
 127.0.0.1	localhost
 127.0.1.1	{{host_name}}.{{domain_name}} {{host_name}}
 {% for dc in controllers %}
-"{{dc.ip}}""	"{{dc.name}}"."{{domain_name}}"	"{{dc.name}}"
+{{dc.ip}}	{{dc.name}}.{{dc.domain}}	{{dc.name}}
 {% endfor %}
 
 #192.168.93.187	server.instinctools.ru	server

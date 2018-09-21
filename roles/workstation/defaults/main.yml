@@ -3,11 +3,15 @@
 domain_name: instinctools.ru
 work_group: INSTINCTOOLS
 controllers:
-  - name: server1
+  - name: server
+    domain: "{{domain_name}}"
     ip: 192.168.93.187
   - name: server2
+    domain: "{{domain_name}}"
     ip: 192.168.93.188
   - name: server3
+    domain: "{{domain_name}}"
     ip: 192.168.94.1
-domain_user: admin
-domain_pass: admin
+  - name: minamdc
+    domain: "minsk.{{domain_name}}"
+    ip: 172.17.0.1

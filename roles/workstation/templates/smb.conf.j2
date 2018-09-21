@@ -1,10 +1,10 @@
 [global]
-workgroup = "{{work_group}}"
-realm = "{{domain_name|upper}}"
-server string = 
+workgroup = {{work_group}}
+realm = {{domain_name|upper}}
+server string =
 security = ADS
 encrypt passwords = true
-dns proxy = no 
+dns proxy = no
 socket options = TCP_NODELAY
 domain master = no
 local master = no
@@ -12,7 +12,7 @@ preferred master = no
 os level = 0
 domain logons = no
 idmap config * : range = 10000-20000
-idmap config * : backend = tdb 
+idmap config * : backend = tdb
 winbind enum groups = yes
 winbind enum users = yes
 winbind use default domain = yes

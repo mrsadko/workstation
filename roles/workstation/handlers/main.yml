@@ -1,11 +1,11 @@
 ---
 # handlers file for workstation
-name: restart systemd-logind
-  systemd:
-    name: systemd-logind
-    state: restarted
-
-name: restart ntp
+- name: restart ntp
   systemd:
     name: ntp
+    state: restarted
+
+- name: restart networking
+  systemd:
+    name: networking
     state: restarted

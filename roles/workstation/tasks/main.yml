@@ -1,5 +1,25 @@
 ---
 # tasks file for workstation
+- name: stop apt-daily.service
+  systemd:
+    name: apt-daily.service
+    state: stopped
+
+- name: stop apt-daily.timer
+  systemd:
+    name: apt-daily.timer
+    state: stopped
+
+- name: stop apt-daily-upgrade.service
+  systemd:
+    name: apt-daily-upgrade.service
+    state: stopped
+
+- name: stop apt-daily-upgrade.timer
+  systemd:
+    name: apt-daily-upgrade.timer
+    state: stopped
+
 - name: stop unattended-upgrades
   systemd:
     name: unattended-upgrades
@@ -11,6 +31,10 @@
     install_recommends: yes
     only_upgrade: yes
     upgrade: dist
+  register: apt_status
+  until: apt_status is success
+  delay: 6
+  retries: 20
 
 - name: install new user's packages
   apt:
@@ -22,25 +46,6 @@
     name: "{{item}}"
   with_items: "{{packages.ad}}"
 
-- name: set hostname
-  template:
-    src: hostname.j2
-    dest: /etc/hostname
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-  notify:
-    restart systemd-logind
-
-- name: copy head file
-  template:
-    src: head.j2
-    dest: /etc/resolvconf/resolv.conf.d/head
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
 
 - name: set hosts file
   template:
@@ -50,6 +55,30 @@
     group: root
     mode: 0644
     backup: yes
+
+- name: set hostname
+  hostname:
+    name: "{{host_name}}"
+
+- name: create resolv.conf.d directory
+  file:
+    path: /etc/resolvconf/resolv.conf.d
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+
+- name: copy head file
+  template:
+    src: head.j2
+    dest: /etc/resolvconf/resolv.conf.d/head
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    restart networking
 
 - name: set ntp configuration
   template:
@@ -74,16 +103,7 @@
 - name: set samba configuration
   template:
     src: smb.conf.j2
-    dest: /etc/samba/krb5.conf
-    owner: root
-    group: root
-    mode: 0644
-    backup: yes
-
-- name: set linits
-  template:
-    src: limits.conf.j2
-    dest: /etc/security/limits.conf
+    dest: /etc/samba/smb.conf
     owner: root
     group: root
     mode: 0644
@@ -109,44 +129,63 @@
 
 - name: set pamd common-session config
   template:
-    src: common-session.conf.j2
-    dest: /etc/pam.d/common-session.conf
+    src: common-session.j2
+    dest: /etc/pam.d/common-session
     owner: root
     group: root
     mode: 0644
     backup: yes
 
-- name: restart networking
-  systemd:
-    name: networking
-    state: restarted
-
-- name: stop winbind
-  systemd:
-    name: networking
-    state: stopped
-
-- name: stop restart samba
+- name: restart samba
   systemd:
     name: smbd
     state: restarted
 
-- name: start winbind
-  systemd:
-    name: networking
-    state: started
-
-- name: do test connection
-  command: /usr/bin/net ads testjoin
-    register: testjoin
-    ignore_errors: True
-
 - name: connect to domain
-  command: /usr/bin/net ads join -U "{{domain_user}}" -D "{{domain_pass}}"
-    register: join
-    when: testjoin is succeeded
+  command: /usr/bin/net ads join -U "{{domain_user}}"%"{{domain_pass}}"
+  register: join
+
+- name: check "/usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf"
+  stat:
+    path: /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
+  register: ldm_config_exist
+  when: join is success
+
+- name: add parameters to "/usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf"
+  template:
+    src: 50-ubuntu.conf.j2
+    dest: /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  when: ldm_config_exist.stat.exists
+
+- name: restart winbind
+  systemd:
+    name: winbind
+    state: restarted
+
+- name: Reboot immediately if there was a change.
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+
+- name: Wait for the reboot to complete if there was a change.
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 20
+    delay: 20
+    timeout: 300
+
+- name: wait for domain conection establishing
+  shell: wbinfo -u
+  register: wbinfo_status
+  until: wbinfo_status is success
+  delay: 5
+  retries: 12
 
 - name: add domain user to local groups
-  command: /usr/sbin/adduser "{{}user_to_add}" "{{item}}"
-    when: join is succeeded
+  shell: adduser "{{user_to_add}}" "{{item}}"
   with_items: "{{local_groups}}"
+  when: join is succeeded

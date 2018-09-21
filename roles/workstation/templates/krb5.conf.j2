@@ -1,32 +1,32 @@
 [libdefaults]
-    default_realm = "{{domain_name|upper}}"
+    default_realm = {{domain_name|upper}}
     kdc_timesync = 1
     ccache_type = 4
     forwardable = true
     proxiable = true
     v4_instance_resolve = false
     v4_name_convert = {
-	host = {
+	   host = {
 	    rcmd = host
 	    ftp = ftp
-	}
-	plain = {
+	   }
+	   plain = {
 	    something = something-else
-	}
+	   }
     }
     fcc-mit-ticketflags = true
 
 [realms]
-    "{{domain_name|upper}}" = {
+    {{domain_name|upper}} = {
 	kdc = server.instinctools.ru
 	kdc = server2.instinctools.ru
 	admin_server = server.instinctools.ru
-	default_domain = "{{domain_name|upper}}"
+	default_domain = {{domain_name|upper}}
     }
 
 [domain_realm]
-    .instinctools.ru = "{{domain_name|upper}}"
-    instinctools.ru = "{{domain_name|upper}}"
+    .{{domain_name}} = {{domain_name|upper}}
+    {{domain_name}} = {{domain_name|upper}}
 [login]
     krb4_convert = false
     krb4_get_tickets = false
