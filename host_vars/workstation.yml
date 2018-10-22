@@ -1,11 +1,11 @@
 ---
-ansible_host: 172.25.200.233
+ansible_host: 172.25.200.120
 ansible_port: 22
-ansible_user: auto
-ansible_ssh_pass: auto
-ansible_sudo_pass: auto
+ansible_user: techsupport
+#ansible_ssh_pass: auto
+#ansible_sudo_pass: auto
 become: yes
-host_name: test_lin_pc
+host_name: novemberess
 # user_to_add: someuser
 # domain_user: someuser
 # domain_pass: somepasswd

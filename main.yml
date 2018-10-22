@@ -4,11 +4,11 @@
     - workstation
   vars_prompt:
     - name: user_to_add
-      prompt: "Which user can i add to local groups"
+      prompt: "Which domain user may i add to local groups"
       private: no
     - name: domain_user
-      prompt: "enter domain user name"
+      prompt: "enter your domain user name"
       private: no
     - name: domain_pass
-      prompt: "enter pass"
+      prompt: "enter pass of your domain user"
       private: yes
